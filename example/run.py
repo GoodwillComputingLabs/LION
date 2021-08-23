@@ -21,7 +21,6 @@ if __name__=='__main__':
     # Analysis and Plotting
     clustered_runs    = pd.read_parquet(path_to_clusters)
     path_to_figures = './figures'
-    path_to_cc      = join(path_to_figures, 'cluster_characteristics.pdf')
-    cluster_characteristics(clustered_runs, save_path=path_to_cc)
+    cluster_characteristics(clustered_runs, save_directory=path_to_figures)
     general_temporal_trends(clustered_runs, save_directory=path_to_figures)
     io_performance_variability(clustered_runs, save_directory=path_to_figures)

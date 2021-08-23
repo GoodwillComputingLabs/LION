@@ -1,3 +1,0 @@
---wrap=ncmpi_create
---wrap=ncmpi_open
---wrap=ncmpi_close
