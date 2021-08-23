@@ -1,0 +1,40 @@
+Notes on how to release a new version of Darshan
+2013-05
+-----------------------
+
+- check Darshan GitLab to see if there are any pending tickets for this
+  release/milestone if applicable
+  (https://xgitlab.cels.anl.gov/darshan/darshan/milestones)
+- check for any problems in jenkins nightly builds
+- make sure that documentation in darshan-util/doc/ and darshan-runtime/doc/
+  are up to date
+- update the Changelog if needed (browse git log since last release)
+  - commit
+- update version number in configure.in (see AC_INIT)
+  - in both darshan-util/ and darshan-runtime/
+  - re-run ./prepare in both darshan-util and darshan-runtime
+  - commit
+- generate example output files on x86_64 and commit in
+  darshan-test/example-output/ directory
+- use "git status" to make sure that all changes have been committed and
+  pushed to origin/master
+- make a tag for the release according to instructions at
+  http://git-scm.com/book/en/Git-Basics-Tagging
+  - example (annotated tag, pushed to repo):
+    git tag -a darshan-2.3.1-pre2 -m 'Darshan 2.3.1-pre2'
+    git push origin darshan-2.3.1-pre2
+- TESTING
+  - manually trigger jenkins test
+  - run regression tests on BG platform (see
+    darshan-test/regression/README.BG.ALCF.txt)
+- export the tag and tar gzip it
+  - do a fresh checkout of the Darshan tag
+  - make sure to pull in AutoPerf submodule (git submodule update --init)
+  - remove the .git subdirectory
+  - upload .tar.gz file to /mcs/ftp/pub/darshan/releases
+- generate web documentation from asciidoc by running make in
+  darshan-util/doc/ and darshan-runtime/doc/ directories
+  - upload .html files to /mcs/web/research/projects/darshan/docs
+- update download page on darshan web site: www.mcs.anl.gov/darshan/download
+- announce on web page (new post) and mailing list
+

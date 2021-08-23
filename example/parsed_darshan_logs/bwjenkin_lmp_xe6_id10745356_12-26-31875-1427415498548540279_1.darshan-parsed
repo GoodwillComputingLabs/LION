@@ -1,0 +1,79 @@
+# darshan log version: 3.10
+# compression method: ZLIB
+# exe: /scratch/system/bwjenkins/tests/lammps/15May15/cle5.2_gnu4.9.3/bin/lmp_xe6 -in in.rhodo.scaled
+# uid: 49294
+# jobid: 10745356
+# start_time: 1577371875
+# start_time_asci: Thu Dec 26 09:51:15 2019
+# end_time: 1577371896
+# end_time_asci: Thu Dec 26 09:51:36 2019
+# nprocs: 4
+# run time: 22
+# metadata: lib_ver = 3.1.3
+# metadata: h = romio_no_indep_rw=true;cb_nodes=4
+
+# log file regions
+# -------------------------------------------------------
+# header: 360 bytes (uncompressed)
+# job data: 207 bytes (compressed)
+# record table: 224 bytes (compressed)
+# LUSTRE module: 58 bytes (compressed), ver=1
+# STDIO module: 252 bytes (compressed), ver=1
+
+# mounted file systems (mount point and fs type)
+# -------------------------------------------------------
+# mount entry:	/mnt/b	lustre
+# mount entry:	/mnt/a	lustre
+# mount entry:	/mnt/c	lustre
+# mount entry:	/etc	dvs
+# mount entry:	/	rootfs
+# mount entry:	/	dvs
+
+# *******************************************************
+# STDIO module data
+# *******************************************************
+
+# description of STDIO counters:
+#   STDIO_{OPENS|FDOPENS|WRITES|READS|SEEKS|FLUSHES} are types of operations.
+#   STDIO_BYTES_*: total bytes read and written.
+#   STDIO_MAX_BYTE_*: highest offset byte read and written.
+#   STDIO_*_RANK: rank of the processes that were the fastest and slowest at I/O (for shared files).
+#   STDIO_*_RANK_BYTES: bytes transferred by the fastest and slowest ranks (for shared files).
+#   STDIO_F_*_START_TIMESTAMP: timestamp of the first call to that type of function.
+#   STDIO_F_*_END_TIMESTAMP: timestamp of the completion of the last call to that type of function.
+#   STDIO_F_*_TIME: cumulative time spent in different types of functions.
+#   STDIO_F_*_RANK_TIME: fastest and slowest I/O time for a single rank (for shared files).
+#   STDIO_F_VARIANCE_RANK_*: variance of total I/O time and bytes moved for all ranks (for shared files).
+
+# WARNING: STDIO module log format version 1 has the following limitations:
+# - No support for properly instrumenting fdopen operations (STDIO_FDOPENS)
+
+total_STDIO_OPENS: 5
+total_STDIO_FDOPENS: -4
+total_STDIO_READS: 382178
+total_STDIO_WRITES: 272
+total_STDIO_SEEKS: 0
+total_STDIO_FLUSHES: 1
+total_STDIO_BYTES_WRITTEN: 8323
+total_STDIO_BYTES_READ: 12580496
+total_STDIO_MAX_BYTE_READ: 6289908
+total_STDIO_MAX_BYTE_WRITTEN: 4315
+total_STDIO_FASTEST_RANK: 0
+total_STDIO_FASTEST_RANK_BYTES: 0
+total_STDIO_SLOWEST_RANK: 0
+total_STDIO_SLOWEST_RANK_BYTES: 0
+total_STDIO_F_META_TIME: 0.006901
+total_STDIO_F_WRITE_TIME: 0.002990
+total_STDIO_F_READ_TIME: 0.121315
+total_STDIO_F_OPEN_START_TIMESTAMP: 0.029528
+total_STDIO_F_CLOSE_START_TIMESTAMP: 0.386969
+total_STDIO_F_WRITE_START_TIMESTAMP: 0.000000
+total_STDIO_F_READ_START_TIMESTAMP: 0.032367
+total_STDIO_F_OPEN_END_TIMESTAMP: 0.389941
+total_STDIO_F_CLOSE_END_TIMESTAMP: 21.104931
+total_STDIO_F_WRITE_END_TIMESTAMP: 21.094114
+total_STDIO_F_READ_END_TIMESTAMP: 0.740881
+total_STDIO_F_FASTEST_RANK_TIME: 0.000000
+total_STDIO_F_SLOWEST_RANK_TIME: 0.000000
+total_STDIO_F_VARIANCE_RANK_TIME: 0.000000
+total_STDIO_F_VARIANCE_RANK_BYTES: 0.000000

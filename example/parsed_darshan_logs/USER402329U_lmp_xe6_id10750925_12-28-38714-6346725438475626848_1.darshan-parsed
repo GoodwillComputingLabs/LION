@@ -1,0 +1,79 @@
+# darshan log version: 3.10
+# compression method: ZLIB
+# exe: ./lmp_xe6
+# uid: 402329
+# jobid: 10750925
+# start_time: 1577551514
+# start_time_asci: Sat Dec 28 11:45:14 2019
+# end_time: 1577583924
+# end_time_asci: Sat Dec 28 20:45:24 2019
+# nprocs: 256
+# run time: 32411
+# metadata: lib_ver = 3.1.3
+# metadata: h = romio_no_indep_rw=true;cb_nodes=4
+
+# log file regions
+# -------------------------------------------------------
+# header: 360 bytes (uncompressed)
+# job data: 136 bytes (compressed)
+# record table: 337 bytes (compressed)
+# LUSTRE module: 209 bytes (compressed), ver=1
+# STDIO module: 1072 bytes (compressed), ver=1
+
+# mounted file systems (mount point and fs type)
+# -------------------------------------------------------
+# mount entry:	/mnt/c	lustre
+# mount entry:	/mnt/a	lustre
+# mount entry:	/mnt/b	lustre
+# mount entry:	/etc	dvs
+# mount entry:	/	dvs
+# mount entry:	/	rootfs
+
+# *******************************************************
+# STDIO module data
+# *******************************************************
+
+# description of STDIO counters:
+#   STDIO_{OPENS|FDOPENS|WRITES|READS|SEEKS|FLUSHES} are types of operations.
+#   STDIO_BYTES_*: total bytes read and written.
+#   STDIO_MAX_BYTE_*: highest offset byte read and written.
+#   STDIO_*_RANK: rank of the processes that were the fastest and slowest at I/O (for shared files).
+#   STDIO_*_RANK_BYTES: bytes transferred by the fastest and slowest ranks (for shared files).
+#   STDIO_F_*_START_TIMESTAMP: timestamp of the first call to that type of function.
+#   STDIO_F_*_END_TIMESTAMP: timestamp of the completion of the last call to that type of function.
+#   STDIO_F_*_TIME: cumulative time spent in different types of functions.
+#   STDIO_F_*_RANK_TIME: fastest and slowest I/O time for a single rank (for shared files).
+#   STDIO_F_VARIANCE_RANK_*: variance of total I/O time and bytes moved for all ranks (for shared files).
+
+# WARNING: STDIO module log format version 1 has the following limitations:
+# - No support for properly instrumenting fdopen operations (STDIO_FDOPENS)
+
+total_STDIO_OPENS: 725
+total_STDIO_FDOPENS: -16
+total_STDIO_READS: 1956
+total_STDIO_WRITES: 305659
+total_STDIO_SEEKS: 0
+total_STDIO_FLUSHES: 327
+total_STDIO_BYTES_WRITTEN: 5270392592
+total_STDIO_BYTES_READ: 20837981
+total_STDIO_MAX_BYTE_READ: 20831342
+total_STDIO_MAX_BYTE_WRITTEN: 135901369
+total_STDIO_FASTEST_RANK: 64
+total_STDIO_FASTEST_RANK_BYTES: 0
+total_STDIO_SLOWEST_RANK: 0
+total_STDIO_SLOWEST_RANK_BYTES: 49760
+total_STDIO_F_META_TIME: 10.518868
+total_STDIO_F_WRITE_TIME: 12.857024
+total_STDIO_F_READ_TIME: 0.154231
+total_STDIO_F_OPEN_START_TIMESTAMP: 0.000000
+total_STDIO_F_CLOSE_START_TIMESTAMP: 0.000000
+total_STDIO_F_WRITE_START_TIMESTAMP: 0.211467
+total_STDIO_F_READ_START_TIMESTAMP: 0.000000
+total_STDIO_F_OPEN_END_TIMESTAMP: 32409.569583
+total_STDIO_F_CLOSE_END_TIMESTAMP: 32409.667381
+total_STDIO_F_WRITE_END_TIMESTAMP: 32409.666666
+total_STDIO_F_READ_END_TIMESTAMP: 0.566090
+total_STDIO_F_FASTEST_RANK_TIME: 0.000000
+total_STDIO_F_SLOWEST_RANK_TIME: 0.000000
+total_STDIO_F_VARIANCE_RANK_TIME: 0.000000
+total_STDIO_F_VARIANCE_RANK_BYTES: 0.000000

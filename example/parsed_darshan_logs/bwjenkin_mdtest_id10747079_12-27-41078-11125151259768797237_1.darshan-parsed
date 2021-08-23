@@ -1,0 +1,34 @@
+# darshan log version: 3.10
+# compression method: ZLIB
+# exe: /u/system/bwjenkins/mdtest-jenkins/mdtest/mdtest -n 2000 -v -d /u/system/bwjenkins/scratch/mdtest
+# uid: 49294
+# jobid: 10747079
+# start_time: 1577467478
+# start_time_asci: Fri Dec 27 12:24:38 2019
+# end_time: 1577467532
+# end_time_asci: Fri Dec 27 12:25:32 2019
+# nprocs: 24
+# run time: 55
+# metadata: lib_ver = 3.1.3
+# metadata: h = romio_no_indep_rw=true;cb_nodes=4
+
+# log file regions
+# -------------------------------------------------------
+# header: 360 bytes (uncompressed)
+# job data: 179 bytes (compressed)
+# record table: 306386 bytes (compressed)
+# POSIX module: 836022 bytes (compressed), ver=3
+# STDIO module: 81 bytes (compressed), ver=1
+
+# mounted file systems (mount point and fs type)
+# -------------------------------------------------------
+# mount entry:	/mnt/b	lustre
+# mount entry:	/mnt/a	lustre
+# mount entry:	/mnt/c	lustre
+# mount entry:	/etc	dvs
+# mount entry:	/	rootfs
+# mount entry:	/	dvs
+
+# *******************************************************
+# POSIX module data
+# *******************************************************

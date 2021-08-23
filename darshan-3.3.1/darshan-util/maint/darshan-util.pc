@@ -1,0 +1,17 @@
+prefix = /usr/local
+exec_prefix = ${prefix}
+libdir = ${exec_prefix}/lib
+includedir = ${prefix}/include
+abs_top_builddir = /home/emily/Documents/LION/darshan-3.3.1/darshan-util
+darshan_zlib_include_flags = 
+darshan_zlib_link_flags = 
+LIBBZ2 = 
+
+Name: darshan-util
+Description: Library for parsing and summarizing log files produced by Darshan runtime
+Version: 3.3.1
+URL: http://trac.mcs.anl.gov/projects/darshan/
+Requires:
+Libs: -L${libdir} -ldarshan-util 
+Libs.private: ${darshan_zlib_link_flags} -lz ${LIBBZ2}
+Cflags: -I${includedir} ${darshan_zlib_include_flags}
