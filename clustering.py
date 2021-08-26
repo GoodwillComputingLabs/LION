@@ -10,7 +10,8 @@ from os.path import join, isfile, exists
 import numpy as np
 from multiprocessing import Pool, cpu_count
 from sklearn.preprocessing import StandardScaler
-from memory_profiler import profile
+from memory_profiler import profile # profiling
+import os, psutil # profiling
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -97,7 +98,7 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         print('Files collected total >%d in %d chunks.'%(total_files,chunk_number+1))
     return clusters
 
-@profile
+@profile #profiling
 def _cluster_with_run_info(args):
     application = args[0]
     df_results = args[1]
@@ -107,6 +108,7 @@ def _cluster_with_run_info(args):
     df_results = df_results.iloc[pos]
     if(df_results.shape[0]<threshold):
         return None
+    print('Size of cluster: %d'%df_results.shape[0]) # profiling
     # Standardize
     df_results['Amount of Write I/O, Scaled'] = df_results['Amount of Write I/O']
     df_results['Amount of Read I/O, Scaled'] = df_results['Amount of Read I/O']
@@ -125,6 +127,7 @@ def _cluster_with_run_info(args):
                     'Read 4M-10M', 'Read 10M-100M', 'Read 100M-1G', 'Read 1G+']].copy()
     clustering_reads  = AgglomerativeClustering(n_clusters=None, compute_full_tree=True, distance_threshold=0.1).fit(X)
     df_results['Cluster Read'] = clustering_reads.labels_
+    print('Memory used (in GB) for application %s: %.3f:'%(application,(psutil.Process(os.getpid()).memory_info().rss/1024**3))) # profiling
     # Divide by cluster
     max_read  = df_results['Cluster Read'].max()
     max_write = df_results['Cluster Write'].max()
