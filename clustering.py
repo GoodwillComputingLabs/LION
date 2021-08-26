@@ -10,6 +10,7 @@ from os.path import join, isfile, exists
 import numpy as np
 from multiprocessing import Pool, cpu_count
 from sklearn.preprocessing import StandardScaler
+from memory_profiler import profile
 pd.options.mode.chained_assignment = None  # default='warn'
 
 def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1000, verbose=False):
@@ -95,6 +96,7 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         print('Files collected total >%d in %d chunks.'%(total_files,chunk_number+1))
     return clusters
 
+@profile
 def _cluster_with_run_info(args):
     application = args[0]
     df_results = args[1]
