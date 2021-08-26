@@ -111,9 +111,10 @@ def _cluster_with_run_info(args):
     scaler = StandardScaler() 
     try:
         df_scaled = scaler.fit_transform(df_results)
-    except ValueError: 
+    except ValueError:
         return None
     df_scaled = pd.DataFrame(df_scaled, index=df_results.index, columns=df_results.columns).reset_index()
+    # Clustering
     X = df_scaled[['Amount of Write I/O, Scaled', 'Write 0-100', 'Write 100-1K', 'Write 1K-10K', 'Write 10K-100K', 'Write 100K-1M', 'Write 1M-4M', 
                     'Write 4M-10M', 'Write 10M-100M', 'Write 100M-1G', 'Write 1G+']].copy()
     clustering_writes = AgglomerativeClustering(n_clusters=None, compute_full_tree=True, distance_threshold=0.1).fit(X)
