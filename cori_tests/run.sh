@@ -12,7 +12,11 @@ module load python
 pip install pyarrow
 pip install -U memory_profiler
 
-WORK_PATH='/global/homes/e/emily/eju/LION/cori_tests/'
+WORK_PATH='/global/homes/e/emily/eju/LION/cori_tests/test1'
+rm -rf $WORK_PATH
+mkdir $WORK_PATH
 cp ~/eju/project_incite/io_variability_scripts/clustering.py $WORK_PATH
+cp ~/eju/LION/cori_tests/run.py $WORK_PATH
+cd $WORK_PATH
 
 python3 -W ignore run.py
