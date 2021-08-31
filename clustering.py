@@ -4,16 +4,14 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import time
 from sklearn.cluster import AgglomerativeClustering
+import dask.dataframe as dd
 import pandas as pd
 from os import walk, mkdir
 from os.path import join, isfile, exists
 import numpy as np
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool, cpu_count, Process
 from sklearn.preprocessing import StandardScaler
-from memory_profiler import profile # profiling
-import os, psutil # profiling
-
-pd.options.mode.chained_assignment = None  # default='warn'
+from math import ceil as ceil
 
 def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1000, verbose=False):
     '''
@@ -31,10 +29,6 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         collecting and saving the data.
     save_path: string, optional
         Where to save the collected data.
-    chunksize: int, optional
-        In order to checkpoint data and continue if data collection is halted,
-        set this to the number of runs to collect info on per "chunk". This will
-        get the program to write the info to the output file with the final info.
     verbose: boolean, optional
         For debugging and info on amount of info being collected.
 
@@ -47,19 +41,31 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         ranks = cpu_count()
     pool = Pool(processes=ranks)
     args = []
-    for a in run_info['Application'].unique():
+    block_size = 20000
+    for a in run_info['Application'].unique().tolist():
         mask = run_info['Application'] == a
         pos = np.flatnonzero(mask)
-        tmp = run_info.iloc[pos]
-        tmp = tmp.shape[0]
-        if(verbose):
-            print('Size of application %s is %d'%(a,tmp))
-        if(tmp>threshold):
-            args.append([a,run_info,threshold])
-    clusters = pd.DataFrame()
+        tmp = run_info.iloc[pos].sample(frac=1) # randomly shuffle so no time bias
+        if(tmp.shape[0]>threshold):
+            no_blocks = ceil(tmp.shape[0]/block_size)
+            for n in range(0,no_blocks):
+                adj_block_size = int(tmp.shape[0]/no_blocks)
+                start_block = n*adj_block_size
+                end_block = start_block + adj_block_size 
+                tmp_b = tmp.iloc[start_block:end_block]
+                args.append([a,tmp_b,threshold])
+    columns=['Application','Operation','Cluster Number','Cluster Size','Filename']
+    clusters = pd.DataFrame(columns=columns)
     start = time.time()
     chunk_number = 1
-    pqwriter = None
+    pqwriter = None 
+    schema_fields = [
+            pa.field('Application', pa.string()),
+            pa.field('Cluster Number', pa.int64()),
+            pa.field('Cluster Size', pa.int64()),
+            pa.field('Filename', pa.string()),
+            pa.field('Operation', pa.string())]
+    schema = pa.schema(schema_fields)
     n = 0
     for i in pool.imap_unordered(_cluster_with_run_info, args):
         if(i is None):
@@ -70,7 +76,7 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
             end = time.time()
             print('It took %d minutes for %d files'%((end-start)/60,n))
         if(clusters.shape[0]>chunksize-1):
-            table = pa.Table.from_pandas(clusters)
+            table = pa.Table.from_pandas(clusters, schema=schema, preserve_index=False)
             if(chunk_number==1 and exists(save_path)==False):
                 pqwriter = pq.ParquetWriter(save_path, table.schema)
             elif(chunk_number==1 and exists(save_path)==True):
@@ -82,15 +88,14 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
                 print("Chunk #%d has been written to file."%chunk_number)
             chunk_number = chunk_number + 1
             pqwriter.write_table(table)
-            clusters = pd.DataFrame()    
-    table = pa.Table.from_pandas(clusters)
+            clusters = pd.DataFrame(columns=columns)
+    table = pa.Table.from_pandas(clusters, schema=schema, preserve_index=False)
     if(chunk_number==1):
         pqwriter = pq.ParquetWriter(save_path, table.schema)
     try:
         pqwriter.write_table(table)
-    except ValueError:
-        if(verbose):
-            print('Chunk %d produced 0 clusters'%chunk_number)
+    except KeyError:
+        print('Columns in dataframe do not match the pyarrow schema.')
     if(pqwriter):
         pqwriter.close()
     total_files = clusters.shape[0]+chunk_number*chunksize
@@ -98,36 +103,27 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         print('Files collected total >%d in %d chunks.'%(total_files,chunk_number+1))
     return clusters
 
-@profile #profiling
 def _cluster_with_run_info(args):
     application = args[0]
     df_results = args[1]
     threshold = args[2]
-    mask = df_results['Application'] == application
-    pos = np.flatnonzero(mask)
-    df_results = df_results.iloc[pos]
-    if(df_results.shape[0]<threshold):
-        return None
-    print('Size of cluster: %d'%df_results.shape[0]) # profiling
     # Standardize
-    df_results['Amount of Write I/O, Scaled'] = df_results['Amount of Write I/O']
-    df_results['Amount of Read I/O, Scaled'] = df_results['Amount of Read I/O']
-    df_results = df_results.set_index(['Filename', 'Application', 'Read Performance', 'Write Performance', 'Amount of Write I/O', 'Amount of Read I/O', 'Start Time', 'End Time'])
+    df_results = df_results.set_index(['Filename','Application'])
     scaler = StandardScaler() 
     try:
         df_scaled = scaler.fit_transform(df_results)
-    except ValueError: 
+    except ValueError:
         return None
     df_scaled = pd.DataFrame(df_scaled, index=df_results.index, columns=df_results.columns).reset_index()
-    X = df_scaled[['Amount of Write I/O, Scaled', 'Write 0-100', 'Write 100-1K', 'Write 1K-10K', 'Write 10K-100K', 'Write 100K-1M', 'Write 1M-4M', 
+    # Clustering
+    X = df_scaled[['Amount of Write I/O', 'Write 0-100', 'Write 100-1K', 'Write 1K-10K', 'Write 10K-100K', 'Write 100K-1M', 'Write 1M-4M', 
                     'Write 4M-10M', 'Write 10M-100M', 'Write 100M-1G', 'Write 1G+']].copy()
     clustering_writes = AgglomerativeClustering(n_clusters=None, compute_full_tree=True, distance_threshold=0.1).fit(X)
     df_results['Cluster Write'] = clustering_writes.labels_
-    X = df_scaled[['Amount of Read I/O, Scaled', 'Read 0-100', 'Read 100-1K', 'Read 1K-10K', 'Read 10K-100K','Read 100K-1M', 'Read 1M-4M', 
+    X = df_scaled[['Amount of Read I/O', 'Read 0-100', 'Read 100-1K', 'Read 1K-10K', 'Read 10K-100K','Read 100K-1M', 'Read 1M-4M', 
                     'Read 4M-10M', 'Read 10M-100M', 'Read 100M-1G', 'Read 1G+']].copy()
     clustering_reads  = AgglomerativeClustering(n_clusters=None, compute_full_tree=True, distance_threshold=0.1).fit(X)
     df_results['Cluster Read'] = clustering_reads.labels_
-    print('Memory used (in GB) for application %s: %.3f:'%(application,(psutil.Process(os.getpid()).memory_info().rss/1024**3))) # profiling
     # Divide by cluster
     max_read  = df_results['Cluster Read'].max()
     max_write = df_results['Cluster Write'].max()
@@ -144,8 +140,7 @@ def _cluster_with_run_info(args):
             continue
         for idx, row in df_read.iterrows():
             dict = {'Application': application, 'Operation': 'Read', 'Cluster Number': cluster_no,
-            'Cluster Size': no_runs, 'Filename': row['Filename'], 'Performance': row['Read Performance'], 
-            'I/O Amount': row['Amount of Read I/O'], 'Start Time': row['Start Time'], 'End Time': row['End Time']}
+            'Cluster Size': no_runs, 'Filename': row['Filename']}
             df_return = df_return.append(dict, ignore_index=True)
         cluster_no = cluster_no + 1
     # Now write
@@ -160,8 +155,7 @@ def _cluster_with_run_info(args):
             continue
         for idx, row in df_write.iterrows():
             dict = {'Application': application, 'Operation': 'Write', 'Cluster Number': cluster_no,
-            'Cluster Size': no_runs, 'Filename': row['Filename'], 'Performance': row['Write Performance'], 
-            'I/O Amount': row['Amount of Write I/O'], 'Start Time': row['Start Time'], 'End Time': row['End Time']}
+            'Cluster Size': no_runs, 'Filename': row['Filename']}
             df_return = df_return.append(dict, ignore_index=True)
         cluster_no = cluster_no + 1
     return df_return
