@@ -98,7 +98,6 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         print('Files collected total >%d in %d chunks.'%(total_files,chunk_number+1))
     return clusters
 
-@profile #profiling
 def _cluster_with_run_info(args):
     application = args[0]
     df_results = args[1]
