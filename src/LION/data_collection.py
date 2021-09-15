@@ -112,7 +112,7 @@ def _collect_data(run):
         try:
             lines = f.read().split("\n")
         except UnicodeDecodeError:
-            print('Read err%s'%file)
+            print('Read err%s'%f)
         f.close()
     try: 
         # add: start time, end time, performance
