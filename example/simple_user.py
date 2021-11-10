@@ -6,6 +6,7 @@
 # scatter + regression: amount i/o vs perf var zscore
 
 from os import read
+import os
 import pandas as pd
 from pandas.core.frame import DataFrame
 import numpy as np
@@ -16,6 +17,9 @@ import seaborn as sns
 all_df = pd.read_parquet('/scratch/costa.em/total/cluster_info.parquet')
 top_apps = all_df['Application'].value_counts().head(5).to_dict().keys()
 for app in top_apps:
+    fig_path = os.path.join('./figures/single_user',app)
+    if not os.path.exists(fig_path):
+        os.mkdir(fig_path)
     mask = all_df.loc[:,'Application'] == app 
     pos = np.flatnonzero(mask)
     df = all_df.iloc[pos]
@@ -64,7 +68,7 @@ for app in top_apps:
     ax.axvline(write_median, color='maroon', zorder=0, linestyle=':', linewidth=2)
     # Add legend
     ax.legend(loc='lower right', fancybox=True)
-    plt.savefig('./figures/single_user/perf_zscores_CDF.pdf')
+    plt.savefig(os.path.join(fig_path,'/perf_zscores_CDF.pdf'))
     plt.clf()
     plt.close()
 
@@ -105,7 +109,7 @@ for app in top_apps:
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     #plt.tight_layout()
-    plt.savefig('./figures/single_user/io-amount_v_perf_var.pdf')
+    plt.savefig(os.path.join(fig_path,'./figures/single_user/io-amount_v_perf_var.pdf'))
     plt.clf()
     plt.close()
 
@@ -146,7 +150,7 @@ for app in top_apps:
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     #plt.tight_layout()
-    plt.savefig('./figures/single_user/run-span_v_perf-var.pdf')
+    plt.savefig(os.path.join(fig_path,'./figures/single_user/run-span_v_perf-var.pdf'))
     plt.clf()
     plt.close()
 
@@ -225,12 +229,11 @@ for app in top_apps:
         axes[n][1].set_xlim([np.min(x), np.max(x)])
         #axes[n][1].set_title(op)
         axes[n][1].set_xlabel(" ")
-
     fig.subplots_adjust(left=0.11, bottom=0.12, right=.98, top=.95, wspace=0.1, hspace=0.35)
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     fig.text(0.31, 0.99, 'Read', ha='center', va='top')
     fig.text(0.78, 0.99, 'Write', ha='center', va='top')
-    plt.savefig('./figures/single_user/temp_v_perf_var.pdf')
+    plt.savefig(os.path.join(fig_path,'./figures/single_user/temp_v_perf_var.pdf'))
     plt.clf()
     plt.close()
