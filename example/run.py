@@ -1,11 +1,10 @@
 import sys
-sys.path.insert(1, '../.')
+sys.path.insert(1, '../src/LION')
 from data_collection import collect_darshan_data
 from clustering import cluster_runs
 from analysis_and_plots import cluster_characteristics, general_temporal_trends, io_performance_variability
 import pandas as pd
 from os.path import join
-import tracemalloc
 
 if __name__=='__main__':
     path_to_total    = './parsed_darshan_logs'
