@@ -68,7 +68,7 @@ for app in top_apps:
     ax.axvline(write_median, color='maroon', zorder=0, linestyle=':', linewidth=2)
     # Add legend
     ax.legend(loc='lower right', fancybox=True)
-    plt.savefig(os.path.join(fig_path,'/perf_zscores_CDF.pdf'))
+    plt.savefig(os.path.join(fig_path,'perf_zscores_CDF.pdf'))
     plt.clf()
     plt.close()
 
@@ -109,7 +109,7 @@ for app in top_apps:
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     #plt.tight_layout()
-    plt.savefig(os.path.join(fig_path,'./figures/single_user/io-amount_v_perf_var.pdf'))
+    plt.savefig(os.path.join(fig_path,'io-amount_v_perf_var.pdf'))
     plt.clf()
     plt.close()
 
@@ -150,7 +150,7 @@ for app in top_apps:
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     #plt.tight_layout()
-    plt.savefig(os.path.join(fig_path,'./figures/single_user/run-span_v_perf-var.pdf'))
+    plt.savefig(os.path.join(fig_path,'run-span_v_perf-var.pdf'))
     plt.clf()
     plt.close()
 
@@ -207,11 +207,11 @@ for app in top_apps:
         sns.regplot(x, y, ax=axes[n][0], color='skyblue',label=op)
         axes[n][0].set_ylim(-3, 3)
         axes[n][0].set_yticks(np.arange(-3,4,1))
-        axes[n][0].set_xticks(np.arange(min(x),max(x)+1,1))
+        #axes[n][0].set_xticks(np.arange(min(x),max(x)+1,1))
         #axes[n][0].set_title(op)
         axes[n][0].set_xlabel(" ")
         axes[n][0].margins(0)
-        axes[n][0].set_xlim([np.min(x), np.max(x)])
+        #axes[n][0].set_xlim([np.min(x), np.max(x)])
         # Now, write
         op = 'Write'
         df = zscored_df
@@ -225,8 +225,8 @@ for app in top_apps:
         #axes[n][1].plot(x, m*x+b, color='maroon',ls=':',lw=2)
         sns.regplot(x, y, ax=axes[n][0], color='maroon',label=op)
         axes[n][1].set_ylim(-3, 3)
-        axes[n][1].set_xticks(np.arange(min(x),max(x)+1,1))
-        axes[n][1].set_xlim([np.min(x), np.max(x)])
+        #axes[n][1].set_xticks(np.arange(min(x),max(x)+1,1))
+        #axes[n][1].set_xlim([np.min(x), np.max(x)])
         #axes[n][1].set_title(op)
         axes[n][1].set_xlabel(" ")
     fig.subplots_adjust(left=0.11, bottom=0.12, right=.98, top=.95, wspace=0.1, hspace=0.35)
@@ -234,6 +234,6 @@ for app in top_apps:
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     fig.text(0.31, 0.99, 'Read', ha='center', va='top')
     fig.text(0.78, 0.99, 'Write', ha='center', va='top')
-    plt.savefig(os.path.join(fig_path,'./figures/single_user/temp_v_perf_var.pdf'))
+    plt.savefig(os.path.join(fig_path,'temp_v_perf_var.pdf'))
     plt.clf()
     plt.close()
