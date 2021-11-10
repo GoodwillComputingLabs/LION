@@ -14,8 +14,12 @@ import math
 import matplotlib.pyplot as plt
 from datetime import date, datetime, timedelta
 
-df = pd.read_parquet('./data/cluster_info.parquet')
-print(df.columns)
+all_df = pd.read_parquet('/scratch/costa.em/total/cluster_info.parquet')
+top_apps = all_df['Application'].value_counts().head(5).to_dict().keys()
+for app in top_apps:
+    mask = all_df.loc[:,'Application'] == app 
+    pos = np.flatnonzero(mask)
+    df = all_df.iloc[pos]
 cluster_nos = df.loc[:,'Cluster Number'].unique().tolist()
 zscored_df = DataFrame()
 for cluster_no in cluster_nos:
