@@ -45,7 +45,6 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
     '''
     if ranks is None:
         ranks = cpu_count()
-    pool = Pool(processes=ranks)
     args = []
     for a in run_info['Application'].unique():
         mask = run_info['Application'] == a
@@ -61,6 +60,31 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
     chunk_number = 1
     pqwriter = None
     n = 0
+    with Pool(processes=ranks) as pool:
+        result = pool.imap_unordered(_cluster_with_run_info, args)
+        for i in result:
+            if(i is None):
+                continue
+            clusters = clusters.append(i, ignore_index=True)
+            n = (((chunk_number-1)*chunksize)+clusters.shape[0])
+            if(verbose and n%10000==0):
+                end = time.time()
+                print('It took %d minutes for %d files'%((end-start)/60,n))
+            if(clusters.shape[0]>chunksize-1):
+                table = pa.Table.from_pandas(clusters)
+                if(chunk_number==1 and exists(save_path)==False):
+                    pqwriter = pq.ParquetWriter(save_path, table.schema)
+                elif(chunk_number==1 and exists(save_path)==True):
+                    temp = pd.read_parquet(save_path)
+                    pqwriter = pq.ParquetWriter(save_path, table.schema)
+                    pqwriter.write_table(pa.Table.from_pandas(temp))
+                    temp = None
+                if(verbose):
+                    print("Chunk #%d has been written to file."%chunk_number)
+                chunk_number = chunk_number + 1
+                pqwriter.write_table(table)
+                clusters = pd.DataFrame()
+    '''
     for i in pool.imap_unordered(_cluster_with_run_info, args):
         if(i is None):
             continue
@@ -83,6 +107,7 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
             chunk_number = chunk_number + 1
             pqwriter.write_table(table)
             clusters = pd.DataFrame()    
+    '''
     table = pa.Table.from_pandas(clusters)
     if(chunk_number==1):
         pqwriter = pq.ParquetWriter(save_path, table.schema)
@@ -98,6 +123,7 @@ def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1
         print('Files collected total >%d in %d chunks.'%(total_files,chunk_number+1))
     return clusters
 
+@profile #profiling
 def _cluster_with_run_info(args):
     application = args[0]
     df_results = args[1]
