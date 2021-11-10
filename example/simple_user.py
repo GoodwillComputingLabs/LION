@@ -206,7 +206,7 @@ for app in top_apps:
         #axes[n][0].plot(x, m*x+b, color='skyblue',ls='--',lw=2)
         sns.regplot(x, y, x_estimator=np.mean, ax=axes[n][0], color='skyblue',label=op)
         axes[n][0].set_ylim(-3, 3)
-        axes[n][1].set_ylabel('')
+        axes[n][0].set_ylabel('')
         axes[n][0].set_yticks(np.arange(-3,4,1))
         #axes[n][0].set_xticks(np.arange(min(x),max(x)+1,1))
         #axes[n][0].set_title(op)
