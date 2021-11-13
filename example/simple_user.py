@@ -242,3 +242,53 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'temp_v_perf_var.jpg'))
     plt.clf()
     plt.close()
+
+    df = zscored_df
+    read_df = df[df['Operation']=='Read']
+    write_df = df[df['Operation']=='Write']
+    fig, axes = plt.subplots(1, 2, sharey=True, figsize=[5,1.9])
+    fig.subplots_adjust(left=0.16, right=0.990, top=0.96, bottom=0.38, wspace=0.03)
+    order = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+    sns.violinplot(ax=axes[0], x='Day of Week', y='Performance Z-Score', data=read_df, order=order, color='skyblue', inner='quartile', edgecolor='black')
+    sns.violinplot(ax=axes[1], x='Day of Week', y='Performance Z-Score', data=write_df, order=order, color='maroon', inner='quartile')
+    axes[0].set_ylabel('')
+    axes[1].set_ylabel('')
+    fig.text(0.37, 0.135, '(a) Read', ha='center')
+    fig.text(0.78, 0.135, '(b) Write', ha='center')
+    fig.text(0.58, 0.02, 'Day of Week', ha='center')
+    fig.text(0.001, 0.65, "Performance\nZ-Score", rotation=90, va='center', multialignment='center')
+    axes[0].set_xlabel('')
+    axes[1].set_xlabel('')
+    axes[0].yaxis.grid(color='lightgrey', linestyle=':')
+    axes[1].yaxis.grid(color='lightgrey', linestyle=':')
+    axes[0].set_axisbelow(True)
+    axes[1].set_axisbelow(True)
+    axes[0].set_ylim(-3,3)
+    axes[0].set_yticks(range(-3,4,1))
+    axes[0].tick_params(axis='x', labelsize=14)
+    axes[1].tick_params(axis='x', labelsize=14)
+    axes[0].tick_params(axis='y', labelsize=14)
+    axes[1].tick_params(axis='y', labelsize=14)
+    for l in axes[0].lines:
+        l.set_linestyle('--')
+        l.set_linewidth(0.6)
+        l.set_color('black')
+        l.set_alpha(0.8)
+    for l in axes[0].lines[1::3]:
+        l.set_linestyle('-')
+        l.set_linewidth(1.2)
+        l.set_color('black')
+        l.set_alpha(0.8)
+    for l in axes[1].lines:
+        l.set_linestyle('--')
+        l.set_linewidth(0.6)
+        l.set_color('white')
+        l.set_alpha(0.8)
+    for l in axes[1].lines[1::3]:
+        l.set_linestyle('-')
+        l.set_linewidth(1.2)
+        l.set_color('white')
+        l.set_alpha(0.8)
+    plt.savefig(os.path.join(fig_path,'dow_v_perf_var.jpg'))
+    plt.clf()
+    plt.close()
