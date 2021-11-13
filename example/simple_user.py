@@ -13,6 +13,7 @@ import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 import seaborn as sns
+pd.set_option('mode.chained_assignment', None)
 
 all_df = pd.read_parquet('/scratch/costa.em/total/cluster_info.parquet')
 top_apps = all_df['Application'].value_counts().head(5).to_dict().keys()
@@ -68,7 +69,7 @@ for app in top_apps:
     ax.axvline(write_median, color='maroon', zorder=0, linestyle=':', linewidth=2)
     # Add legend
     ax.legend(loc='lower right', fancybox=True)
-    plt.savefig(os.path.join(fig_path,'perf_zscores_CDF.pdf'))
+    plt.savefig(os.path.join(fig_path,'perf_zscores_CDF.jpg'))
     plt.clf()
     plt.close()
 
@@ -109,7 +110,7 @@ for app in top_apps:
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     #plt.tight_layout()
-    plt.savefig(os.path.join(fig_path,'io-amount_v_perf_var.pdf'))
+    plt.savefig(os.path.join(fig_path,'io-amount_v_perf_var.jpg'))
     plt.clf()
     plt.close()
 
@@ -150,7 +151,7 @@ for app in top_apps:
     fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     #plt.tight_layout()
-    plt.savefig(os.path.join(fig_path,'run-span_v_perf-var.pdf'))
+    plt.savefig(os.path.join(fig_path,'run-span_v_perf-var.jpg'))
     plt.clf()
     plt.close()
 
@@ -188,7 +189,7 @@ for app in top_apps:
     df.loc[:,'Hour of Day'] = df.loc[:,'Datetime'].dt.hour
 
     zscored_df = df
-
+    print(zscored_df.head)
     fig, axes = plt.subplots(3, 2, sharey=True, figsize=[5, 4])
     x_axes = ['Day','Week','Month']
     for n in range(len(x_axes)):
@@ -201,10 +202,10 @@ for app in top_apps:
         df = df.iloc[pos]
         x = df.loc[:,x_axis]
         y = df.loc[:,'Performance Z-Score']
-        #axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
+        axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
         #m, b = np.polyfit(x, y, 1)
         #axes[n][0].plot(x, m*x+b, color='skyblue',ls='--',lw=2)
-        sns.regplot(x, y, x_estimator=np.mean, ax=axes[n][0], color='skyblue',label=op)
+        #sns.regplot(x=x, y=y, x_estimator=np.mean, ax=axes[n][0], color='skyblue',label=op)
         axes[n][0].set_ylim(-3, 3)
         axes[n][0].set_ylabel('')
         axes[n][0].set_yticks(np.arange(-3,4,1))
@@ -222,10 +223,10 @@ for app in top_apps:
         df = df.iloc[pos]
         x = df.loc[:, x_axis]
         y = df.loc[:,'Performance Z-Score']
-        #axes[n][1].scatter(x, y, marker='.', color='maroon',label=op)
+        axes[n][1].scatter(x, y, marker='.', color='maroon',label=op)
         #m, b = np.polyfit(x, y, 1)
         #axes[n][1].plot(x, m*x+b, color='maroon',ls=':',lw=2)
-        sns.regplot(x, y, x_estimator=np.mean, ax=axes[n][1], color='maroon',label=op)
+        #sns.regplot(x=x, y=y, x_estimator=np.mean, ax=axes[n][1], color='maroon',label=op)
         axes[n][1].set_ylim(-3, 3)
         axes[n][1].set_ylabel('')
         #axes[n][1].set_xticks(np.arange(min(x),max(x)+1,1))
@@ -238,6 +239,6 @@ for app in top_apps:
     fig.text(0.31, 0.99, 'Read', ha='center', va='top')
     fig.text(0.78, 0.99, 'Write', ha='center', va='top')
     #fig.text(0.
-    plt.savefig(os.path.join(fig_path,'temp_v_perf_var.pdf'))
+    plt.savefig(os.path.join(fig_path,'temp_v_perf_var.jpg'))
     plt.clf()
     plt.close()
