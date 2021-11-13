@@ -35,7 +35,7 @@ for app in top_apps:
         tmp.loc[:,'Performance Z-Score'] = stats.zscore(tmp['Performance'])
         tmp.loc[:,'Run Time Span'] = tmp.loc[:,'End Time']-tmp.loc[:,'Start Time']
         zscored_df = zscored_df.append(tmp,ignore_index=True)
-
+    '''
     df = zscored_df
     read_info = df[df['Operation']=='Read']['Performance Z-Score'].tolist()
     read_median = np.median(read_info)
@@ -154,7 +154,7 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'run-span_v_perf-var.jpg'))
     plt.clf()
     plt.close()
-
+    '''
     # collect: date, date by week, time of day, day of week (Monday, etc)
     df = zscored_df
 
@@ -248,7 +248,8 @@ for app in top_apps:
     write_df = df[df['Operation']=='Write']
     fig, axes = plt.subplots(1, 2, sharey=True, figsize=[5,1.9])
     fig.subplots_adjust(left=0.16, right=0.990, top=0.96, bottom=0.38, wspace=0.03)
-    order = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+    order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    labels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
     sns.violinplot(ax=axes[0], x='Day of Week', y='Performance Z-Score', data=read_df, order=order, color='skyblue', inner='quartile', edgecolor='black')
     sns.violinplot(ax=axes[1], x='Day of Week', y='Performance Z-Score', data=write_df, order=order, color='maroon', inner='quartile')
     axes[0].set_ylabel('')
@@ -259,6 +260,8 @@ for app in top_apps:
     fig.text(0.001, 0.65, "Performance\nZ-Score", rotation=90, va='center', multialignment='center')
     axes[0].set_xlabel('')
     axes[1].set_xlabel('')
+    axes[0].set_xticklabels(labels)
+    axes[1].set_xticklabels(labels)
     axes[0].yaxis.grid(color='lightgrey', linestyle=':')
     axes[1].yaxis.grid(color='lightgrey', linestyle=':')
     axes[0].set_axisbelow(True)
