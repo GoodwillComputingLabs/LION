@@ -260,8 +260,11 @@ for app in top_apps:
                 r = x[i]+1
                 while(r not in x and r<max(x)):
                     r = r+1
-                if l!=min(x) and r!=max(x) and y[l]>0.5 and y[r]>0.5:
-                    axes[n][0].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                try:
+                    if l!=min(x) and r!=max(x) and y[l]>0.5 and y[r]>0.5:
+                        axes[n][0].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                except KeyError:
+                    continue
             elif y[i]<-0.5:
                 l = x[i]-1
                 while(l not in x and l>min(x)):
@@ -269,8 +272,11 @@ for app in top_apps:
                 r = x[i]+1
                 while(r not in x and r<max(x)):
                     r = r+1
-                if l!=min(x) and r!=max(x) and y[l]<-0.5 and y[r]<-0.5:
-                    axes[n][0].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                try:
+                    if l!=min(x) and r!=max(x) and y[l]<-0.5 and y[r]<-0.5:
+                        axes[n][0].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                except KeyError:
+                    continue
             #for r in np.arange(0.5,3.5,.5):
             #    alpha = alpha+0.1
             #    if y[i]>r:
@@ -309,8 +315,11 @@ for app in top_apps:
                 r = x[i]+1
                 while(r not in x and r<max(x)):
                     r = r+1
-                if l!=min(x) and r!=max(x) and y[l]>0.5 and y[r]>0.5:
-                    axes[n][1].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                try:
+                    if l!=min(x) and r!=max(x) and y[l]>0.5 and y[r]>0.5:
+                         axes[n][1].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                except KeyError:
+                    continue
             elif y[i]<-0.5:
                 l = x[i]-1
                 while(l not in x and l>min(x)):
@@ -318,8 +327,11 @@ for app in top_apps:
                 r = x[i]+1
                 while(r not in x and r<max(x)):
                     r = r+1
-                if l!=min(x) and r!=max(x) and y[l]<-0.5 and y[r]<-0.5:
-                    axes[n][1].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                try:
+                    if l!=min(x) and r!=max(x) and y[l]<-0.5 and y[r]<-0.5:
+                        axes[n][1].axvspan(x[l]-0.5, x[r]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+                except KeyError:
+                    continue
             #for r in np.arange(0.5,3.5,.5):
             #    alpha = alpha+0.1
             #    if y[i]>r:
