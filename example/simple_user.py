@@ -189,7 +189,6 @@ for app in top_apps:
     df.loc[:,'Hour of Day'] = df.loc[:,'Datetime'].dt.hour
 
     zscored_df = df
-    print(zscored_df.head)
     fig, axes = plt.subplots(3, 2, sharey=True, figsize=[5, 4])
     x_axes = ['Day','Week','Month']
     for n in range(len(x_axes)):
@@ -203,18 +202,11 @@ for app in top_apps:
         x = df.loc[:,x_axis]
         y = df.loc[:,'Performance Z-Score']
         axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
-        #m, b = np.polyfit(x, y, 1)
-        #axes[n][0].plot(x, m*x+b, color='skyblue',ls='--',lw=2)
-        #sns.regplot(x=x, y=y, x_estimator=np.mean, ax=axes[n][0], color='skyblue',label=op)
         axes[n][0].set_ylim(-3, 3)
         axes[n][0].set_ylabel('')
         axes[n][0].set_yticks(np.arange(-3,4,1))
-        #axes[n][0].set_xticks(np.arange(min(x),max(x)+1,1))
-        #axes[n][0].set_title(op)
         axes[n][0].set_xlabel(" ")
         axes[n][0].margins(0)
-        #axes[n][0].set_xlabel("%s #"%x_axis)
-        #axes[n][0].set_xlim([np.min(x), np.max(x)])
         # Now, write
         op = 'Write'
         df = zscored_df
@@ -224,15 +216,8 @@ for app in top_apps:
         x = df.loc[:, x_axis]
         y = df.loc[:,'Performance Z-Score']
         axes[n][1].scatter(x, y, marker='.', color='maroon',label=op)
-        #m, b = np.polyfit(x, y, 1)
-        #axes[n][1].plot(x, m*x+b, color='maroon',ls=':',lw=2)
-        #sns.regplot(x=x, y=y, x_estimator=np.mean, ax=axes[n][1], color='maroon',label=op)
         axes[n][1].set_ylim(-3, 3)
         axes[n][1].set_ylabel('')
-        #axes[n][1].set_xticks(np.arange(min(x),max(x)+1,1))
-        #axes[n][1].set_xlim([np.min(x), np.max(x)])
-        #axes[n][1].set_title(op)
-        #axes[n][1].set_xlabel("%s #"%x_axis)
     fig.subplots_adjust(left=0.11, bottom=0.09, right=.98, top=.95, wspace=0.1, hspace=0.55)
     fig.text(0.31, 0.65, x_axes[0], ha='center', va='bottom')
     fig.text(0.31, 0.32, x_axes[1], ha='center', va='bottom')
@@ -243,8 +228,53 @@ for app in top_apps:
     fig.text(0.01, 0.5, 'Performance Score', ha='left', va='center', rotation=90)
     fig.text(0.31, 0.99, 'Read', ha='center', va='top')
     fig.text(0.78, 0.99, 'Write', ha='center', va='top')
-    #fig.text(0.
     plt.savefig(os.path.join(fig_path,'temp_v_perf_var.jpg'))
+    plt.clf()
+    plt.close()
+
+    fig, axes = plt.subplots(3, 2, sharey=True, figsize=[5, 4])
+    x_axes = ['Day','Week','Month']
+    for n in range(len(x_axes)):
+        x_axis = x_axes[n]
+        # First, plot read
+        op = 'Read'
+        df = zscored_df
+        mask = df.loc[:,'Operation'] == op 
+        pos = np.flatnonzero(mask)
+        df = df.iloc[pos]
+        print(df)
+        df = df[['Performance Z-Score',x_axis]].groupby(x_axis, as_index=False).mean()
+        print(df)
+        x = df.loc[:,x_axis]
+        y = df.loc[:,'Performance Z-Score']
+        axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
+        axes[n][0].set_ylim(-3, 3)
+        axes[n][0].set_ylabel('')
+        axes[n][0].set_yticks(np.arange(-3,4,1))
+        axes[n][0].set_xlabel(" ")
+        axes[n][0].margins(0)
+        # Now, write
+        op = 'Write'
+        df = zscored_df
+        mask = df.loc[:,'Operation'] == op
+        pos = np.flatnonzero(mask)
+        df = df.iloc[pos][['Performance Z-Score',x_axis]].groupby(x_axis, as_index=False).mean()
+        x = df.loc[:, x_axis]
+        y = df.loc[:,'Performance Z-Score']
+        axes[n][1].scatter(x, y, marker='.', color='maroon',label=op)
+        axes[n][1].set_ylim(-3, 3)
+        axes[n][1].set_ylabel('')
+    fig.subplots_adjust(left=0.11, bottom=0.09, right=.98, top=.95, wspace=0.1, hspace=0.55)
+    fig.text(0.31, 0.65, x_axes[0], ha='center', va='bottom')
+    fig.text(0.31, 0.32, x_axes[1], ha='center', va='bottom')
+    fig.text(0.31, 0.00, x_axes[2], ha='center', va='bottom')
+    fig.text(0.78, 0.65, x_axes[0], ha='center', va='bottom')
+    fig.text(0.78, 0.32, x_axes[1], ha='center', va='bottom')
+    fig.text(0.78, 0.00, x_axes[2], ha='center', va='bottom')
+    fig.text(0.01, 0.5, 'Performance Score', ha='left', va='center', rotation=90)
+    fig.text(0.31, 0.99, 'Read', ha='center', va='top')
+    fig.text(0.78, 0.99, 'Write', ha='center', va='top')
+    plt.savefig(os.path.join(fig_path,'temp_v_perf_var-AVG.jpg'))
     plt.clf()
     plt.close()
     '''
