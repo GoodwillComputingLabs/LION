@@ -234,7 +234,6 @@ for app in top_apps:
 
     fig, axes = plt.subplots(3, 2, sharey=True, figsize=[5, 4])
     x_axes = ['Day','Week','Month']
-    alpha = 0.2
     for n in range(len(x_axes)):
         x_axis = x_axes[n]
         # First, plot read
@@ -249,12 +248,13 @@ for app in top_apps:
         axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
         axes[n][0].set_ylim(-3, 3)
         for i in range(0,len(y)):
+            alpha = 0.2
             for r in np.arange(0.5,3.5,.5):
                 alpha = alpha+0.2
                 if y[i]>r:
-                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green')
+                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green', edgecolor=None)
                 elif y[i]<-r:
-                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow')
+                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow', edgecolor=None)
         axes[n][0].set_ylabel('')
         axes[n][0].set_yticks(np.arange(-3,4,1))
         axes[n][0].yaxis.grid(color='lightgrey', linestyle=':')
@@ -273,12 +273,13 @@ for app in top_apps:
         axes[n][1].scatter(x, y, marker='.', color='maroon',label=op)
         axes[n][1].set_ylim(-3, 3)
         for i in range(0,len(y)):
+            alpha = 0.2
             for r in np.arange(0.5,3.5,.5):
                 alpha = alpha+0.2
                 if y[i]>r:
-                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green')
+                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green', edgecolor=None)
                 elif y[i]<-r:
-                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow')
+                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow', edgecolor=None)
         axes[n][1].set_ylabel('')
         axes[n][1].yaxis.grid(color='lightgrey', linestyle=':')
         axes[n][1].set_axisbelow(True)
