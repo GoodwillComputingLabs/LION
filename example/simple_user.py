@@ -161,28 +161,28 @@ for app in top_apps:
     df.loc[:,'Datetime'] = pd.to_datetime(df.loc[:,'Start Time'],unit='s')
 
     df.loc[:,'Day'] = df.loc[:,'Datetime'].dt.to_period('D').dt.to_timestamp()
-    day_range = pd.date_range(min(df.loc[:,'Day']),max(df.loc[:,'Day']),freq='D').tolist()
+    day_range = pd.date_range(min(df.loc[:,'Day'])-pd.DateOffset(days=1),max(df.loc[:,'Day']),freq='D').tolist()
     d = {}
     for i in range(1,len(day_range)+1):
-        d[day_range[i-1]] = i
+        d[day_range[i-1]] = int(i)
     df.loc[:,'Day'] = df.loc[:,'Day'].map(d)
 
     df.loc[:,'Week'] = df.loc[:,'Datetime'].dt.to_period('W').dt.to_timestamp()
-    week_range = pd.date_range(min(df.loc[:,'Week']),max(df.loc[:,'Week']),freq='W').tolist()
+    week_range = pd.date_range(min(df.loc[:,'Week'])-pd.DateOffset(weeks=1),max(df.loc[:,'Week']),freq='W').tolist()
     if week_range==[]:
         week_range = [min(df.loc[:,'Week'])]
     d = {}
     for i in range(1,len(week_range)+1):
-        d[week_range[i-1]] = i
+        d[week_range[i-1]+pd.Timedelta(days=1)] = int(i)
     df.loc[:,'Week'] = df.loc[:,'Week'].map(d)
 
     df.loc[:,'Month'] = df.loc[:,'Datetime'].dt.to_period('M').dt.to_timestamp()
-    month_range = pd.date_range(min(df.loc[:,'Month']),max(df.loc[:,'Month']),freq='M').tolist()
+    month_range = pd.date_range(min(df.loc[:,'Month'])-pd.DateOffset(months=1),max(df.loc[:,'Month']),freq='M').tolist()
     if month_range==[]:
         month_range = [min(df.loc[:,'Month'])]
     d = {}
     for i in range(1,len(month_range)+1):
-        d[month_range[i-1]] = i
+        d[month_range[i-1]+pd.Timedelta(days=1)] = i
     df.loc[:,'Month'] = df.loc[:,'Month'].map(d)
 
     df.loc[:,'Day of Week'] = df.loc[:,'Datetime'].dt.day_name()
@@ -194,6 +194,7 @@ for app in top_apps:
     x_axes = ['Day','Week','Month']
     for n in range(len(x_axes)):
         x_axis = x_axes[n]
+        print(x_axis)
         # First, plot read
         op = 'Read'
         df = zscored_df
@@ -201,6 +202,7 @@ for app in top_apps:
         pos = np.flatnonzero(mask)
         df = df.iloc[pos]
         x = df.loc[:,x_axis]
+        print(x[:5])
         y = df.loc[:,'Performance Z-Score']
         axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
         #m, b = np.polyfit(x, y, 1)
@@ -242,7 +244,7 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'temp_v_perf_var.jpg'))
     plt.clf()
     plt.close()
-
+    '''
     df = zscored_df
     read_df = df[df['Operation']=='Read']
     write_df = df[df['Operation']=='Write']
@@ -295,3 +297,4 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'dow_v_perf_var.jpg'))
     plt.clf()
     plt.close()
+    '''
