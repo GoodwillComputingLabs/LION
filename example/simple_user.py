@@ -253,6 +253,7 @@ for app in top_apps:
         axes[n][0].set_yticks(np.arange(-3,4,1))
         axes[n][0].yaxis.grid(color='lightgrey', linestyle=':')
         axes[n][0].set_axisbelow(True)
+        axes[n][0].axhline(y=0, color='darkgrey', linestyle=':')
         axes[n][0].set_xlabel(" ")
         axes[n][0].margins(0)
         # Now, write
@@ -268,6 +269,7 @@ for app in top_apps:
         axes[n][1].set_ylabel('')
         axes[n][1].yaxis.grid(color='lightgrey', linestyle=':')
         axes[n][1].set_axisbelow(True)
+        axes[n][1].axhline(y=0, color='darkgrey', linestyle=':')
     fig.subplots_adjust(left=0.11, bottom=0.09, right=.98, top=.95, wspace=0.1, hspace=0.55)
     fig.text(0.31, 0.65, x_axes[0], ha='center', va='bottom')
     fig.text(0.31, 0.32, x_axes[1], ha='center', va='bottom')
