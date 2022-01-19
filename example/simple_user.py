@@ -252,10 +252,10 @@ for app in top_apps:
             for r in np.arange(0.5,3.5,.5):
                 alpha = alpha+0.1
                 if y[i]>r:
-                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green', lw=0)
+                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green', lw=0, zorder=2)
                 elif y[i]<-r:
-                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow', lw=0)
-        axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
+                    axes[n][0].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+        axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op, zorder=1)
         axes[n][0].set_ylim(-3, 3)
         axes[n][0].set_ylabel('')
         axes[n][0].set_yticks(np.arange(-3,4,1))
@@ -279,10 +279,10 @@ for app in top_apps:
             for r in np.arange(0.5,3.5,.5):
                 alpha = alpha+0.1
                 if y[i]>r:
-                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green', lw=0)
+                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='green', lw=0, zorder=2)
                 elif y[i]<-r:
-                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow', lw=0)
-        axes[n][1].scatter(x, y, marker='.', color='maroon',label=op)
+                    axes[n][1].axvspan(x[i]-0.5, x[i]+0.5, alpha=alpha, color='yellow', lw=0, zorder=2)
+        axes[n][1].scatter(x, y, marker='.', color='maroon',label=op, zorder=1)
         axes[n][1].set_ylim(-3, 3)
         axes[n][1].set_ylabel('')
         axes[n][1].yaxis.grid(color='lightgrey', linestyle=':')
