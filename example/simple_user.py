@@ -194,7 +194,6 @@ for app in top_apps:
     x_axes = ['Day','Week','Month']
     for n in range(len(x_axes)):
         x_axis = x_axes[n]
-        print(x_axis)
         # First, plot read
         op = 'Read'
         df = zscored_df
@@ -202,7 +201,6 @@ for app in top_apps:
         pos = np.flatnonzero(mask)
         df = df.iloc[pos]
         x = df.loc[:,x_axis]
-        print(x[:5])
         y = df.loc[:,'Performance Z-Score']
         axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
         #m, b = np.polyfit(x, y, 1)
@@ -215,7 +213,7 @@ for app in top_apps:
         #axes[n][0].set_title(op)
         axes[n][0].set_xlabel(" ")
         axes[n][0].margins(0)
-        axes[n][0].set_xlabel("%s #"%x_axis)
+        #axes[n][0].set_xlabel("%s #"%x_axis)
         #axes[n][0].set_xlim([np.min(x), np.max(x)])
         # Now, write
         op = 'Write'
@@ -235,8 +233,8 @@ for app in top_apps:
         #axes[n][1].set_xlim([np.min(x), np.max(x)])
         #axes[n][1].set_title(op)
         axes[n][1].set_xlabel("%s #"%x_axis)
-    fig.subplots_adjust(left=0.11, bottom=0.12, right=.98, top=.90, wspace=0.1, hspace=0.35)
-    #fig.text(0.5, 0.01, x_axis, ha='center', va='bottom')
+    fig.subplots_adjust(left=0.11, bottom=0.12, right=.98, top=.90, wspace=0.1, hspace=0.55)
+    fig.text(0.5, 0.91, x_axis[0], ha='center', va='bottom')
     fig.text(0.01, 0.6, 'Performance Score', ha='left', va='center', rotation=90)
     fig.text(0.31, 0.99, 'Read', ha='center', va='top')
     fig.text(0.78, 0.99, 'Write', ha='center', va='top')
