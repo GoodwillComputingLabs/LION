@@ -242,18 +242,21 @@ for app in top_apps:
         mask = df.loc[:,'Operation'] == op 
         pos = np.flatnonzero(mask)
         df = df.iloc[pos]
-        print(df)
         df = df[['Performance Z-Score',x_axis]].groupby(x_axis, as_index=False).mean()
-        print(df)
         x = df.loc[:,x_axis]
         y = df.loc[:,'Performance Z-Score']
         axes[n][0].scatter(x, y, marker='.', color='skyblue',label=op)
         axes[n][0].set_ylim(-3, 3)
+        for i in range(0,len(y)):
+            if y[i]>0.5:
+                axes[n][0].axvspan(x[i], x[i]+1, alpha=0.3, color='green')
+            elif y[i]<-0.5:
+                axes[n][0].axvspan(x[i], x[i]+1, alpha=0.3, color='yellow')
         axes[n][0].set_ylabel('')
         axes[n][0].set_yticks(np.arange(-3,4,1))
         axes[n][0].yaxis.grid(color='lightgrey', linestyle=':')
-        axes[n][0].set_axisbelow(True)
         axes[n][0].axhline(y=0, color='darkgrey', linestyle=':')
+        axes[n][0].set_axisbelow(True)
         axes[n][0].set_xlabel(" ")
         axes[n][0].margins(0)
         # Now, write
