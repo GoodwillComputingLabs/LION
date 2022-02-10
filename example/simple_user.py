@@ -35,7 +35,7 @@ for app in top_apps:
         tmp.loc[:,'Performance Z-Score'] = stats.zscore(tmp['Performance'])
         tmp.loc[:,'Run Time Span'] = tmp.loc[:,'End Time']-tmp.loc[:,'Start Time']
         zscored_df = zscored_df.append(tmp,ignore_index=True)
-    '''
+    #'''
     df = zscored_df
     read_info = df[df['Operation']=='Read']['Performance Z-Score'].tolist()
     read_median = np.median(read_info)
@@ -154,7 +154,7 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'run-span_v_perf-var.jpg'))
     plt.clf()
     plt.close()
-    '''
+    #'''
     # collect: date, date by week, time of day, day of week (Monday, etc)
     df = zscored_df
 
@@ -357,7 +357,7 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'temp_v_perf_var-AVG.jpg'))
     plt.clf()
     plt.close()
-    '''
+    #'''
     df = zscored_df
     read_df = df[df['Operation']=='Read']
     write_df = df[df['Operation']=='Write']
@@ -410,4 +410,4 @@ for app in top_apps:
     plt.savefig(os.path.join(fig_path,'dow_v_perf_var.jpg'))
     plt.clf()
     plt.close()
-    '''
+    #'''
