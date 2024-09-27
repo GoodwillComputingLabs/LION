@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/LION/__init__.py
+src/LION.egg-info/PKG-INFO
+src/LION.egg-info/SOURCES.txt
+src/LION.egg-info/dependency_links.txt
+src/LION.egg-info/top_level.txt

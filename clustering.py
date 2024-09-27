@@ -10,6 +10,10 @@ from os.path import join, isfile, exists
 import numpy as np
 from multiprocessing import Pool, cpu_count
 from sklearn.preprocessing import StandardScaler
+from memory_profiler import profile # profiling
+import os, psutil # profiling
+
+pd.options.mode.chained_assignment = None  # default='warn'
 
 def cluster_runs(run_info, ranks=None, threshold=40, save_path=None, chunksize=1000, verbose=False):
     '''
@@ -103,6 +107,7 @@ def _cluster_with_run_info(args):
     df_results = df_results.iloc[pos]
     if(df_results.shape[0]<threshold):
         return None
+    print('Size of cluster: %d'%df_results.shape[0]) # profiling
     # Standardize
     df_results['Amount of Write I/O, Scaled'] = df_results['Amount of Write I/O']
     df_results['Amount of Read I/O, Scaled'] = df_results['Amount of Read I/O']
@@ -110,10 +115,9 @@ def _cluster_with_run_info(args):
     scaler = StandardScaler() 
     try:
         df_scaled = scaler.fit_transform(df_results)
-    except ValueError:
+    except ValueError: 
         return None
     df_scaled = pd.DataFrame(df_scaled, index=df_results.index, columns=df_results.columns).reset_index()
-    # Clustering
     X = df_scaled[['Amount of Write I/O, Scaled', 'Write 0-100', 'Write 100-1K', 'Write 1K-10K', 'Write 10K-100K', 'Write 100K-1M', 'Write 1M-4M', 
                     'Write 4M-10M', 'Write 10M-100M', 'Write 100M-1G', 'Write 1G+']].copy()
     clustering_writes = AgglomerativeClustering(n_clusters=None, compute_full_tree=True, distance_threshold=0.1).fit(X)
@@ -122,6 +126,7 @@ def _cluster_with_run_info(args):
                     'Read 4M-10M', 'Read 10M-100M', 'Read 100M-1G', 'Read 1G+']].copy()
     clustering_reads  = AgglomerativeClustering(n_clusters=None, compute_full_tree=True, distance_threshold=0.1).fit(X)
     df_results['Cluster Read'] = clustering_reads.labels_
+    print('Memory used (in GB) for application %s: %.3f:'%(application,(psutil.Process(os.getpid()).memory_info().rss/1024**3))) # profiling
     # Divide by cluster
     max_read  = df_results['Cluster Read'].max()
     max_write = df_results['Cluster Write'].max()
